@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from time import sleep
 import re
 from pprint import pprint as print
+from collections.abc import Iterable
 
 
 class BestceramicCrawler:
@@ -108,10 +109,15 @@ class BestceramicCrawler:
                 self.find_conditions(By.XPATH, "//div[@class='pagination']/a[@class='pagination__item']")) + 1
         if (pagination):
             while (self.find_conditions(By.XPATH,
-                                        "//button[@class='button-reset more_button _transition button-text _font-s _theme-a' and  not(contains(@style,'display: none;'))]")):
-                for i in self.find_conditions(By.XPATH,
-                                              "//button[@class='button-reset more_button _transition button-text _font-s _theme-a' and  not(contains(@style,'display: none;'))]"):
-                    self.__driver.execute_script("arguments[0].click();", i)
+                                        "//button[@class='button-reset more_button _transition button-text _font-s _theme-a' and  not(contains(@style,'display: none'))]")):
+                elems = self.find_conditions(By.XPATH,
+                                             "//button[@class='button-reset more_button _transition button-text _font-s _theme-a' and  not(contains(@style,'display: none'))]")
+                if elems:
+                    if isinstance(elems, Iterable):
+                        for i in elems:
+                            self.__driver.execute_script("arguments[0].click();", i)
+                    else:
+                        self.__driver.execute_script("arguments[0].click();", elems)
             results = self.pagination_collection(results)
         else:
             cards = self.find_conditions(By.XPATH,
