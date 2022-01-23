@@ -126,27 +126,32 @@ class BestceramicCrawler:
                                      "//div[@class='labels__item labels__item_kod']/../../..//div[@class='plate__title']/a",
                                      10)
         for card in cards:
-            results.append(self.page_card(card.get_attribute('href')))
+            page_card_data = self.page_card(card.get_attribute('href'))
+            if page_card_data:
+                results.append(page_card_data)
         return results
 
     def page_card(self, link):
         self.open_new_window(link)
-        card_title = self.get_card_title()
-        card_price = self.get_card_price()
-        card_features = self.get_card_features()
-        card_article = self.get_card_article()
-        card_imgs = self.get_card_img()
-        card_picture = ''
-        if card_imgs:
-            card_picture = ' ; '.join(card_imgs)
+        if (self.find_condition(By.XPATH, "//div[@class='product-single']")):
+            card_title = self.get_card_title()
+            card_price = self.get_card_price()
+            card_features = self.get_card_features()
+            card_article = self.get_card_article()
+            card_imgs = self.get_card_img()
+            card_picture = ''
+            if card_imgs:
+                card_picture = ' ; '.join(card_imgs)
+            self.close_current_window()
+            return {
+                "card_title": card_title,
+                "card_price": card_price,
+                "card_features": card_features,
+                "card_article": card_article,
+                "card_picture": card_picture,
+            }
         self.close_current_window()
-        return {
-            "card_title": card_title,
-            "card_price": card_price,
-            "card_features": card_features,
-            "card_article": card_article,
-            "card_picture": card_picture,
-        }
+        return []
 
     def get_card_article(self):
         try:

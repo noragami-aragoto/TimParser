@@ -42,15 +42,16 @@ class ParseDataToXlsx(ParseDataWriter):
             collection_title = collection.get('collection_title')
             collection_code = collection.get('collection_code')
             for good in collection.get('collection_goods'):
-                worksheet.write(row, correct_list.get('Название коллкции'), collection_title)
-                worksheet.write(row, correct_list.get('Код коллекции'), collection_code)
-                worksheet.write(row, correct_list.get('Название товара'), good.get('card_title'))
-                worksheet.write(row, correct_list.get('Артикуль товара'), good.get('card_article'))
-                worksheet.write(row, correct_list.get('Фотография товара'), good.get('card_picture'))
-                worksheet.write(row, correct_list.get('Цена товара'), good.get('card_price'))
-                for feature_key, feature_value in good.get('card_features').items():
-                    worksheet.write(row, correct_list.get(feature_key), feature_value)
-                row += 1
+                if good:
+                    worksheet.write(row, correct_list.get('Название коллкции'), collection_title)
+                    worksheet.write(row, correct_list.get('Код коллекции'), collection_code)
+                    worksheet.write(row, correct_list.get('Название товара'), good.get('card_title'))
+                    worksheet.write(row, correct_list.get('Артикуль товара'), good.get('card_article'))
+                    worksheet.write(row, correct_list.get('Фотография товара'), good.get('card_picture'))
+                    worksheet.write(row, correct_list.get('Цена товара'), good.get('card_price'))
+                    for feature_key, feature_value in good.get('card_features').items():
+                        worksheet.write(row, correct_list.get(feature_key), feature_value)
+                    row += 1
 
     def collections_collector(self, worksheet, data):
         correct_list = {}
@@ -100,8 +101,9 @@ class ParseDataToXlsx(ParseDataWriter):
         feature_keys = []
         for collection_obj in data:
             for good in collection_obj.get('collection_goods'):
-                features_obj = good.get('card_features')
-                for key in features_obj.keys():
-                    if key not in feature_keys:
-                        feature_keys.append(key)
+                if good:
+                    features_obj = good.get('card_features')
+                    for key in features_obj.keys():
+                        if key not in feature_keys:
+                            feature_keys.append(key)
         return feature_keys
