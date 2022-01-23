@@ -1,7 +1,7 @@
 from crawlers.roaylstone.royalstone_crawler import RoyalstoneCrawler
 from crawlers.bestceramic.bestceramic_crawler import BestceramicCrawler
 from models.parse_data_to_xlsx import ParseDataToXlsx
-
+from update import update
 
 def app(type, link, collection):
     # TODO: вынести в класс
@@ -25,6 +25,7 @@ def app(type, link, collection):
 
 
 if __name__ == '__main__':
+    update()
     parsers = ['royalstone', 'bestceramic']
     start_flag = True
     type = ''
