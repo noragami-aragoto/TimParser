@@ -3,7 +3,9 @@ from crawlers.bestceramic.bestceramic_crawler import BestceramicCrawler
 from models.parse_data_to_xlsx import ParseDataToXlsx
 from update import update
 
+
 def app(type, link, collection):
+    # update
     # TODO: вынести в класс
     if type == 'royalstone':
         parse_data_save = ParseDataToXlsx()
