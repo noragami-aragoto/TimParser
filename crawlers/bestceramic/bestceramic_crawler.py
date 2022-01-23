@@ -147,7 +147,7 @@ class BestceramicCrawler:
             card_imgs = self.get_card_img()
             card_picture = ''
             if card_imgs:
-                card_picture = ' ; '.join(card_imgs)
+                card_picture = ';'.join(card_imgs)
             self.close_current_window()
             return {
                 "card_title": card_title,
@@ -167,7 +167,17 @@ class BestceramicCrawler:
 
     def get_card_img(self):
         try:
-            return [self.find_condition(By.XPATH, '//picture[1]/img[1]').get_attribute('src')]
+            if self.find_condition(By.XPATH,
+                                   "//div[@class='product-slider__inner-small slick-initialized slick-slider slick-vertical']"):
+                results = []
+                elements = self.find_conditions(By.XPATH,
+                                                "//div[@class='product-slider__inner-small slick-initialized slick-slider slick-vertical']//div[contains(@class,'slick-slide')]")
+                for elem in elements:
+                    self.__driver.execute_script("arguments[0].click();", elem)
+                    results.append(self.find_condition(By.XPATH, '//picture[1]/img[1]').get_attribute('src'))
+                return results
+            else:
+                return [self.find_condition(By.XPATH, '//picture[1]/img[1]').get_attribute('src')]
         except Exception as e:
             print(e)
 
