@@ -54,6 +54,27 @@ class RoyalstoneCrawler:
             "collection_goods": collection_goods,
         }
 
+    def page_collection_only(self, link):
+        self.open_new_window(link)
+        results = []
+        collection_title = self.get_collection_title()
+        collection_features = self.get_collection_features()
+        collection_code = self.get_collection_code()
+        collection_pictures = self.get_collection_images()
+        collection_goods = self.get_collection_good()
+        self.close_current_window()
+        results.append({
+            "collection_title": collection_title,
+            "collection_features": collection_features,
+            "collection_code": collection_code,
+            "collection_pictures": collection_pictures,
+            "collection_goods": collection_goods,
+        })
+        data = {'brand_title': collection_title.replace(' ', '_'),
+                'collections': results}
+        self._data_writer.set_path(f'./output/roaylstone/{data.get("brand_title")}.xlsx')
+        self._data_writer.save(data)
+
     def get_brand_title(self):
         try:
             return self.find_condition(By.XPATH, "//h1[@class='uk-heading-bullet']").text

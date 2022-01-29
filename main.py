@@ -10,6 +10,9 @@ def app(type, link, collection):
     if type == 'royalstone':
         parse_data_save = ParseDataToXlsx()
         royalstone_crawler = RoyalstoneCrawler(parse_data_save)
+        if collection:
+            royalstone_crawler.page_collection_only(collection)
+            exit(1)
         if not link:
             royalstone_crawler.execute()
         else:
