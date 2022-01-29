@@ -57,7 +57,7 @@ class RoyalstoneCrawler:
     def page_collection_only(self, link):
         self.open_new_window(link)
         results = []
-        collection_title = self.get_collection_title()
+        collection_title = self.get_collection_title().replace(':', ' ')
         collection_features = self.get_collection_features()
         collection_code = self.get_collection_code()
         collection_pictures = self.get_collection_images()
@@ -83,10 +83,23 @@ class RoyalstoneCrawler:
 
     def get_collection_good(self):
         results = []
-        cards = self.find_conditions(By.XPATH,
-                                     "//div[contains(@class,'uk-card-default ') and @data-product-iblock-id]/div/a", 10)
-        for card in cards:
-            results.append(self.page_card(card.get_attribute('href')))
+        paginations_good = self.find_conditions(By.XPATH,
+                                                "//div[@class='bx-pagination-container row']//li[position() > 1 and position() < count(//div[@class='bx-pagination-container row']//li)]")
+        if (paginations_good):
+            for pagination in paginations_good:
+                pagination.click()
+                cards = self.find_conditions(By.XPATH,
+                                             "//div[contains(@class,'uk-card-default ') and @data-product-iblock-id]/div/a",
+                                             10)
+                for card in cards:
+                    results.append(self.page_card(card.get_attribute('href')))
+        else:
+            cards = self.find_conditions(By.XPATH,
+                                         "//div[contains(@class,'uk-card-default ') and @data-product-iblock-id]/div/a",
+                                         10)
+            for card in cards:
+                results.append(self.page_card(card.get_attribute('href')))
+
         return results
 
     def page_card(self, link):
