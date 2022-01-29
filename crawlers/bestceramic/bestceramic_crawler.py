@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -190,9 +192,14 @@ class BestceramicCrawler:
                 results = []
                 elements = self.find_conditions(By.XPATH,
                                                 "//div[@class='product-slider__inner-small slick-initialized slick-slider slick-vertical']//div[contains(@class,'slick-slide')]")
+                counter = 0
                 for elem in elements:
                     self.__driver.execute_script("arguments[0].click();", elem)
-                    results.append(self.find_condition(By.XPATH, '//picture[1]/img[1]').get_attribute('src'))
+                    results.append(
+                        self.find_condition(By.XPATH,
+                                            f'//div[contains(@data-slick-index,{counter})]//picture//img').get_attribute(
+                            'src'))
+                    counter += 1
                 return results
             else:
                 return [self.find_condition(By.XPATH, '//picture[1]/img[1]').get_attribute('src')]
