@@ -57,21 +57,39 @@ class BestceramicCrawler:
         return results
 
     def page_collection_only(self, link):
-        self.open_new_window(link)
         results = []
-        collection_title = self.get_collection_title()
-        collection_features = {'Характеристики': 'нету'}
-        collection_code = self.__driver.current_url
-        collection_pictures = self.get_collection_images()
-        collection_goods = self.get_collection_good()
-        self.close_current_window()
-        results.append({
-            "collection_title": collection_title,
-            "collection_features": collection_features,
-            "collection_code": collection_code,
-            "collection_pictures": collection_pictures,
-            "collection_goods": collection_goods,
-        })
+        if ';' in link:
+            links = link.split(';')
+            for link in links:
+                self.open_new_window(link)
+                collection_title = self.get_collection_title()
+                collection_features = {'Характеристики': 'нету'}
+                collection_code = self.__driver.current_url
+                collection_pictures = self.get_collection_images()
+                collection_goods = self.get_collection_good()
+                self.close_current_window()
+                results.append({
+                    "collection_title": collection_title,
+                    "collection_features": collection_features,
+                    "collection_code": collection_code,
+                    "collection_pictures": collection_pictures,
+                    "collection_goods": collection_goods,
+                })
+        else:
+            self.open_new_window(link)
+            collection_title = self.get_collection_title().replace(':', ' ')
+            collection_features = self.get_collection_features()
+            collection_code = self.get_collection_code()
+            collection_pictures = self.get_collection_images()
+            collection_goods = self.get_collection_good()
+            self.close_current_window()
+            results.append({
+                "collection_title": collection_title,
+                "collection_features": collection_features,
+                "collection_code": collection_code,
+                "collection_pictures": collection_pictures,
+                "collection_goods": collection_goods,
+            })
         data = {'brand_title': collection_title.replace(' ', '_'),
                 'collections': results}
         self._data_writer.set_path(f'./output/bestceramic/{data.get("brand_title")}.xlsx')
