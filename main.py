@@ -1,5 +1,6 @@
 from crawlers.roaylstone.royalstone_crawler import RoyalstoneCrawler
 from crawlers.bestceramic.bestceramic_crawler import BestceramicCrawler
+from crawlers.mosplitka.mosplitka_crawler import Mosplitka_crawler
 from models.parse_data_to_xlsx import ParseDataToXlsx
 from update import update
 
@@ -27,11 +28,21 @@ def app(type, link, collection):
             bestceramic_crawler.execute()
         else:
             bestceramic_crawler.page_brand(link)
+    elif type == 'mosplitka':
+        parse_data_save = ParseDataToXlsx()
+        mosplitka_crawler = Mosplitka_crawler(parse_data_save)
+        if collection:
+            mosplitka_crawler.page_collection_only(collection)
+            exit(1)
+        if not link:
+            mosplitka_crawler.execute()
+        else:
+            mosplitka_crawler.page_brand(link)
 
 
 if __name__ == '__main__':
     update()
-    parsers = ['royalstone', 'bestceramic']
+    parsers = ['royalstone', 'bestceramic', 'mosplitka']
     start_flag = True
     type = ''
     link = ''
@@ -42,6 +53,7 @@ if __name__ == '__main__':
                             '2: Установить ссылку (если ссылка не выбрана, будут парситься все бренды)\n'
                             '3: Установить коллекцию \n'
                             '0: Старт !!!  \n'))
+
         if command == 1:
             count = 1
             for parser in parsers:
