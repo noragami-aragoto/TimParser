@@ -152,8 +152,6 @@ class BestceramicCrawler:
                                      "//div[@class='labels__item labels__item_kod']/../../..//div[@class='plate__title']/a",
                                      10)
         for card in cards:
-            print(self.page_card(card.get_attribute('href')))
-            exit(1)
             page_card_data = self.page_card(card.get_attribute('href'))
             if page_card_data:
                 results.append(page_card_data)
