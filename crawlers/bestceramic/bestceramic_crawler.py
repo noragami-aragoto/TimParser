@@ -64,7 +64,7 @@ class BestceramicCrawler:
             links = link.split(';')
             for link in links:
                 self.open_new_window(link)
-                collection_title = self.get_collection_title()
+                collection_title = self.get_collection_title().replace(':', ' ')
                 collection_features = {'Характеристики': 'нету'}
                 collection_code = self.__driver.current_url
                 collection_pictures = self.get_collection_images()
@@ -80,8 +80,8 @@ class BestceramicCrawler:
         else:
             self.open_new_window(link)
             collection_title = self.get_collection_title().replace(':', ' ')
-            collection_features = self.get_collection_features()
-            collection_code = self.get_collection_code()
+            collection_features = {'Характеристики': 'нету'}
+            collection_code = self.__driver.current_url
             collection_pictures = self.get_collection_images()
             collection_goods = self.get_collection_good()
             self.close_current_window()
@@ -152,6 +152,8 @@ class BestceramicCrawler:
                                      "//div[@class='labels__item labels__item_kod']/../../..//div[@class='plate__title']/a",
                                      10)
         for card in cards:
+            print(self.page_card(card.get_attribute('href')))
+            exit(1)
             page_card_data = self.page_card(card.get_attribute('href'))
             if page_card_data:
                 results.append(page_card_data)
@@ -195,10 +197,14 @@ class BestceramicCrawler:
                 counter = 0
                 for elem in elements:
                     self.__driver.execute_script("arguments[0].click();", elem)
-                    results.append(
-                        self.find_condition(By.XPATH,
-                                            f'//div[contains(@data-slick-index,{counter})]//picture//img').get_attribute(
-                            'src'))
+                    sleep(1)
+                    try:
+                        results.append(
+                            self.find_condition(By.XPATH,
+                                                f'//div[contains(@data-slick-index,{counter})]//picture//img').get_attribute(
+                                'src'))
+                    except:
+                        pass
                     counter += 1
                 return results
             else:
