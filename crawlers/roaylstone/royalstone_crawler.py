@@ -103,8 +103,11 @@ class RoyalstoneCrawler:
 
     def get_collection_good(self):
         results = []
-        paginations_good = self.find_conditions(By.XPATH,
-                                                "//div[@class='bx-pagination-container row']//li[position() > 1 and position() < count(//div[@class='bx-pagination-container row']//li)]")
+        try:
+            paginations_good = self.find_conditions(By.XPATH,
+                                                    "//div[@class='bx-pagination-container row']//li[position() > 1 and position() < count(//div[@class='bx-pagination-container row']//li)]")
+        except:
+            paginations_good = None
         count = 1
         if (paginations_good):
             for pagination in paginations_good:
