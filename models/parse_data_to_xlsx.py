@@ -15,7 +15,8 @@ class ParseDataToXlsx(ParseDataWriter):
             raise Exception('File path is undefined')
 
     def save(self, data=False):
-        workbook = xlsxwriter.Workbook(filename=self.__file_path, options={'strings_to_urls': False})
+        path = self.__file_path.replace('/','_')
+        workbook = xlsxwriter.Workbook(filename=path, options={'strings_to_urls': False})
         worksheet_products = workbook.add_worksheet('Товары')
         worksheet_collection = workbook.add_worksheet('Коллекции')
         self.collections_collector(worksheet_collection, data.get('collections'))

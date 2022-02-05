@@ -31,9 +31,13 @@ class Mosplitka_crawler:
     def page_brand(self, link):
         results = []
         self.open_new_window(link)
-        pagination = len(self.find_conditions(By.XPATH, "//ul[@class='pagination-catalog__items']/li"))
+        pagination = 0
+        try:
+            pagination = len(self.find_conditions(By.XPATH, "//ul[@class='pagination-catalog__items']/li"))
+        except:
+            pass
         if pagination >= 2:
-            for i in range(1, pagination+1):
+            for i in range(1, pagination + 1):
                 link = self.__driver.current_url + f'?PAGEN_1={i}'
                 self.open_new_window(link)
                 brand_title = self.get_brand_title()
