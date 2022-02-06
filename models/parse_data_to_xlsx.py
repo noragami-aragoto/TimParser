@@ -16,12 +16,13 @@ class ParseDataToXlsx(ParseDataWriter):
 
     def save(self, data=False):
         workbook = xlsxwriter.Workbook(filename=self.__file_path, options={'strings_to_urls': False})
-        worksheet_products = workbook.add_worksheet('Товары')
-        worksheet_collection = workbook.add_worksheet('Коллекции')
+        self.__workbook = workbook
+        worksheet_products = self.__workbook.add_worksheet('Товары')
+        worksheet_collection = self.__workbook.add_worksheet('Коллекции')
         self.collections_collector(worksheet_collection, data.get('collections'))
         self.product_collector(worksheet_products, data.get('collections'))
         print(f'\n Файл {self.__file_path} сохранен \n')
-        workbook.close()
+        self.__workbook.close()
 
     def product_collector(self, worksheet, data):
         correct_list = {}
@@ -80,14 +81,20 @@ class ParseDataToXlsx(ParseDataWriter):
             row += 1
 
     def write_headless(self, title_headline, column, worksheet, correct_list):
+        cell_format = self.__workbook.add_format()
+        cell_format.set_pattern(1)
+        cell_format.set_bg_color('green')
         correct_list[title_headline] = column
-        worksheet.write(0, column, title_headline)
+        worksheet.write(0, column, title_headline, cell_format)
         column += 1
         return column
 
     def write_features_headless(self, features_headlines, column, worksheet, correct_list):
+        cell_format = self.__workbook.add_format()
+        cell_format.set_pattern(1)
+        cell_format.set_bg_color('green')
         for headline in features_headlines:
-            worksheet.write(0, column, headline)
+            worksheet.write(0, column, headline, cell_format)
             correct_list[headline] = column
             column += 1
         return column
