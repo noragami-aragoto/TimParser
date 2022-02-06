@@ -72,7 +72,7 @@ class ParseDataToXlsx(ParseDataWriter):
         for collect_card in data:
             worksheet.write(row, correct_list.get('Код'), collect_card.get('collection_code'))
             worksheet.write(row, correct_list.get('Название коллкции'), collect_card.get('collection_title'))
-            img_list_to_str = ' ; '.join(collect_card.get('collection_pictures'))
+            img_list_to_str = ';'.join(collect_card.get('collection_pictures'))
             worksheet.write(row, correct_list.get('Фотографии'), img_list_to_str)
             collection_features = collect_card.get('collection_features')
             if collection_features:
