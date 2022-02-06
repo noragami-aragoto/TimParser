@@ -53,7 +53,7 @@ class Mosplitka_crawler:
                 collection_link = collection.get_attribute('href')
                 results.append(self.page_collection(collection_link))
             self.close_current_window()
-        data = {'brand_title': brand_title.replace(' ', '_'),
+        data = {'brand_title': brand_title.replace(' ', '_').replace('/', '_'),
                 'collections': results}
         self._data_writer.set_path(f'./output/mosplitka/{data.get("brand_title")}.xlsx')
         self._data_writer.save(data)
@@ -117,7 +117,7 @@ class Mosplitka_crawler:
                 "collection_pictures": collection_pictures,
                 "collection_goods": collection_goods,
             })
-        data = {'brand_title': collection_title.replace(' ', '_'),
+        data = {'brand_title': collection_title.replace(' ', '_').replace('/','_'),
                 'collections': results}
         self._data_writer.set_path(f'./output/mosplitka/{data.get("brand_title")}.xlsx')
         self._data_writer.save(data)

@@ -15,8 +15,7 @@ class ParseDataToXlsx(ParseDataWriter):
             raise Exception('File path is undefined')
 
     def save(self, data=False):
-        path = self.__file_path.replace('/','_')
-        workbook = xlsxwriter.Workbook(filename=path, options={'strings_to_urls': False})
+        workbook = xlsxwriter.Workbook(filename=self.__file_path, options={'strings_to_urls': False})
         worksheet_products = workbook.add_worksheet('Товары')
         worksheet_collection = workbook.add_worksheet('Коллекции')
         self.collections_collector(worksheet_collection, data.get('collections'))
@@ -50,8 +49,11 @@ class ParseDataToXlsx(ParseDataWriter):
                     worksheet.write(row, correct_list.get('Артикуль товара'), good.get('card_article'))
                     worksheet.write(row, correct_list.get('Фотография товара'), good.get('card_picture'))
                     worksheet.write(row, correct_list.get('Цена товара'), good.get('card_price'))
-                    for feature_key, feature_value in good.get('card_features').items():
-                        worksheet.write(row, correct_list.get(feature_key), feature_value)
+                    try:
+                        for feature_key, feature_value in good.get('card_features').items():
+                            worksheet.write(row, correct_list.get(feature_key), feature_value)
+                    except:
+                        pass
                     row += 1
 
     def collections_collector(self, worksheet, data):
@@ -72,8 +74,9 @@ class ParseDataToXlsx(ParseDataWriter):
             img_list_to_str = ' ; '.join(collect_card.get('collection_pictures'))
             worksheet.write(row, correct_list.get('Фотографии'), img_list_to_str)
             collection_features = collect_card.get('collection_features')
-            for feature_key, feature_value in collection_features.items():
-                worksheet.write(row, correct_list.get(feature_key), feature_value)
+            if collection_features:
+                for feature_key, feature_value in collection_features.items():
+                    worksheet.write(row, correct_list.get(feature_key), feature_value)
             row += 1
 
     def write_headless(self, title_headline, column, worksheet, correct_list):
@@ -93,10 +96,12 @@ class ParseDataToXlsx(ParseDataWriter):
         feature_keys = []
         for collection_obj in data:
             features_obj = collection_obj.get('collection_features')
-            for key in features_obj.keys():
-                if key not in feature_keys:
-                    feature_keys.append(key)
-        return feature_keys
+            if features_obj:
+                for key in features_obj.keys():
+                    if key not in feature_keys:
+                        feature_keys.append(key)
+            return feature_keys
+        return ''
 
     def products_features_headlines(self, data):
         feature_keys = []
