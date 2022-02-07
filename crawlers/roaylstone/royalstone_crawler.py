@@ -134,7 +134,10 @@ class RoyalstoneCrawler:
         card_price = self.get_card_price()
         card_features = self.get_card_features()
         card_article = self.get_card_article()
-        card_picture = self.get_card_img()
+        card_imgs = self.get_card_img()
+        card_picture = ''
+        if card_imgs:
+            card_picture = ';'.join(card_imgs)
         self.close_current_window()
         return {
             "card_title": card_title,
@@ -152,7 +155,14 @@ class RoyalstoneCrawler:
 
     def get_card_img(self):
         try:
-            return self.find_condition(By.XPATH, "//a[@class='slider-cursor-zoom'][1]", 10).get_attribute('href')
+            elems = self.find_conditions(By.XPATH, "//a[@class='slider-cursor-zoom']", 10)
+            results = []
+            if elems:
+                for i in elems:
+                    results.append(i.get_attribute('href'))
+                return results
+            else:
+                return [self.find_condition(By.XPATH, "//a[@class='slider-cursor-zoom'][1]", 10).get_attribute('href')]
         except Exception as e:
             print(e)
 
