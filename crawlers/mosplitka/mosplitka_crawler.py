@@ -17,6 +17,7 @@ class Mosplitka_crawler:
     def __init__(self, data_writer):
         self.__driver = self.__driver_init(self.__driver_options())
         self._data_writer = data_writer
+        self.collections_photo = []
 
     def __driver_init(self, options):
         driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
@@ -92,8 +93,9 @@ class Mosplitka_crawler:
                 collection_title = self.get_collection_title().replace(':', ' ')
                 collection_features = self.get_collection_features()
                 collection_code = self.get_collection_code()
-                collection_pictures = self.get_collection_images()
                 collection_goods = self.get_collection_good()
+                collection_pictures = [self.collections_photo[i] for i in range(len(self.collections_photo)) if
+                                       i == self.collections_photo.index(self.collections_photo[i])]
                 self.close_current_window()
                 results.append({
                     "collection_title": collection_title,
@@ -102,13 +104,15 @@ class Mosplitka_crawler:
                     "collection_pictures": collection_pictures,
                     "collection_goods": collection_goods,
                 })
+                self.collections_photo = []
         else:
             self.open_new_window(link)
             collection_title = self.get_collection_title().replace(':', ' ')
             collection_features = self.get_collection_features()
             collection_code = self.get_collection_code()
-            collection_pictures = self.get_collection_images()
             collection_goods = self.get_collection_good()
+            collection_pictures = [self.collections_photo[i] for i in range(len(self.collections_photo)) if
+                                   i == self.collections_photo.index(self.collections_photo[i])]
             self.close_current_window()
             results.append({
                 "collection_title": collection_title,
@@ -117,7 +121,8 @@ class Mosplitka_crawler:
                 "collection_pictures": collection_pictures,
                 "collection_goods": collection_goods,
             })
-        data = {'brand_title': collection_title.replace(' ', '_').replace('/','_'),
+            self.collections_photo = []
+        data = {'brand_title': collection_title.replace(' ', '_').replace('/', '_'),
                 'collections': results}
         self._data_writer.set_path(f'./output/mosplitka/{data.get("brand_title")}.xlsx')
         self._data_writer.save(data)
@@ -131,6 +136,8 @@ class Mosplitka_crawler:
         card_imgs = self.get_card_img()
         card_picture = ''
         if card_imgs:
+            for img in card_imgs:
+                self.collections_photo.append(img)
             card_picture = ';'.join(card_imgs)
         self.close_current_window()
         return {
