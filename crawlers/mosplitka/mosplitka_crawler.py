@@ -138,7 +138,7 @@ class Mosplitka_crawler:
         if card_imgs:
             for img in card_imgs:
                 self.collections_photo.append(img)
-            card_picture = ';'.join(card_imgs)
+            card_picture = ';'.join(set(card_imgs))
         self.close_current_window()
         return {
             "card_title": card_title,
