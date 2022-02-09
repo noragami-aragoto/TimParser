@@ -155,6 +155,7 @@ class Mosplitka_crawler:
             img = "//div[@class='pop-images-big-item slick-slide slick-current slick-active']//img"
             self.__driver.execute_script("document.querySelector('.tile-picture-main__img').click()")
             for i in range(0, count):
+                sleep(1)
                 results.append(self.find_condition(By.XPATH, img).get_attribute('src'))
                 self.__driver.execute_script("document.querySelector('.pop-images-arrow__right').click()")
             return results
