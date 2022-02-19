@@ -68,17 +68,20 @@ class ParseDataToXlsx(ParseDataWriter):
         self.write_collection_data(data, worksheet, correct_list)
 
     def write_collection_data(self, data, worksheet, correct_list):
-        row = 1
-        for collect_card in data:
-            worksheet.write(row, correct_list.get('Код'), collect_card.get('collection_code'))
-            worksheet.write(row, correct_list.get('Название коллкции'), collect_card.get('collection_title'))
-            img_list_to_str = ';'.join(collect_card.get('collection_pictures'))
-            worksheet.write(row, correct_list.get('Фотографии'), img_list_to_str)
-            collection_features = collect_card.get('collection_features')
-            if collection_features:
-                for feature_key, feature_value in collection_features.items():
-                    worksheet.write(row, correct_list.get(feature_key), feature_value)
-            row += 1
+        try:
+            row = 1
+            for collect_card in data:
+                worksheet.write(row, correct_list.get('Код'), collect_card.get('collection_code'))
+                worksheet.write(row, correct_list.get('Название коллкции'), collect_card.get('collection_title'))
+                img_list_to_str = ';'.join(collect_card.get('collection_pictures'))
+                worksheet.write(row, correct_list.get('Фотографии'), img_list_to_str)
+                collection_features = collect_card.get('collection_features')
+                if collection_features:
+                    for feature_key, feature_value in collection_features.items():
+                        worksheet.write(row, correct_list.get(feature_key), feature_value)
+                row += 1
+        except:
+            pass
 
     def write_headless(self, title_headline, column, worksheet, correct_list):
         cell_format = self.__workbook.add_format()
